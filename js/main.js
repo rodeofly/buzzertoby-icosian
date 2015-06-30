@@ -185,7 +185,8 @@
   });
 
   $(function() {
-    var i, j, local_debug, sys, _i, _j, _k;
+    var friction, i, j, repulsion, stiffness, sys, _i, _j, _k, _ref;
+    _ref = [100, 50, 0.5], repulsion = _ref[0], stiffness = _ref[1], friction = _ref[2];
     sys = arbor.ParticleSystem();
     sys.parameters({
       repulsion: 100,
@@ -195,8 +196,6 @@
       precision: 0.005
     });
     sys.renderer = Renderer("#viewport");
-    $("#amount-friction").html("0");
-    local_debug = true;
     for (i = _i = 1; _i <= 5; i = ++_i) {
       sys.addNode(i, {
         'color': "red",
@@ -221,7 +220,7 @@
       min: 1,
       max: 3000,
       step: 10,
-      value: 2000,
+      value: repulsion,
       slide: function(event, ui) {
         $("#amount-repulsion").html(ui.value);
         return sys.parameters({
@@ -229,13 +228,13 @@
         });
       }
     });
-    $("#amount-repulsion").html("2000");
+    $("#amount-repulsion").html(repulsion);
     $("#slider-stiffness").slider({
       range: "max",
       min: 1,
       max: 3000,
       step: 10,
-      value: 1000,
+      value: stiffness,
       slide: function(event, ui) {
         $("#amount-stiffness").html(ui.value);
         return sys.parameters({
@@ -243,20 +242,20 @@
         });
       }
     });
-    $("#amount-stiffness").html("1000");
+    $("#amount-stiffness").html(stiffness);
     return $("#slider-friction").slider({
       range: "max",
       min: 0,
       max: 1,
       step: 0.1,
-      value: 0,
+      value: friction,
       slide: function(event, ui) {
         $("#amount-friction").html(ui.value);
         return sys.parameters({
           friction: ui.value
         });
       }
-    });
+    }, $("#amount-friction").html(friction));
   });
 
 }).call(this);

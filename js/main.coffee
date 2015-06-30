@@ -193,6 +193,8 @@ Renderer = (canvas) ->
 clear : () -> sys.eachNode (node) -> sys.pruneNode node
     
 $ ->
+  [repulsion, stiffness, friction ] = [ 100, 50, 0.5]
+
   sys = arbor.ParticleSystem()
   sys.parameters
     repulsion : 100
@@ -202,8 +204,6 @@ $ ->
     precision : 0.005
   sys.renderer = Renderer("#viewport")
     
-  $( "#amount-friction" ).html("0") 
-  local_debug = true
   for i in [1..5]
     sys.addNode i, {'color' : "red", 'shape' : 'dot', 'label' : " * ", 'mass' : "1" }
   
@@ -220,11 +220,11 @@ $ ->
     min   : 1
     max   : 3000
     step  : 10
-    value : 2000
+    value : repulsion
     slide : ( event, ui ) -> 
       $( "#amount-repulsion" ).html( ui.value )
       sys.parameters repulsion: ui.value          
-  $( "#amount-repulsion" ).html("2000")
+  $( "#amount-repulsion" ).html(repulsion)
 
   
   $( "#slider-stiffness" ).slider
@@ -232,20 +232,21 @@ $ ->
     min   : 1
     max   : 3000
     step  : 10
-    value : 1000
+    value : stiffness
     slide : ( event, ui ) -> 
       $( "#amount-stiffness" ).html( ui.value )
       sys.parameters stiffness: ui.value           
-  $( "#amount-stiffness" ).html("1000")
+  $( "#amount-stiffness" ).html(stiffness)
   
   $( "#slider-friction" ).slider
     range: "max"
     min   : 0
     max   : 1
     step  : 0.1
-    value : 0
+    value : friction
     slide : ( event, ui ) -> 
       $( "#amount-friction" ).html( ui.value )
       sys.parameters friction: ui.value 
+    $( "#amount-friction" ).html(friction) 
       
 
