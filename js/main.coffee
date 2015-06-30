@@ -209,7 +209,7 @@ $ ->
   
   for i in [1..5]
     for j in [1..5]
-      sys.addEdge i, j, {type : "arrow", directed : true, color : "black", weight : 1}
+      sys.addEdge i, j, {type : "arrow", directed : true, color : "black", weight : 1,  length:10,}
       
   #####################################################################
   ######### Sliders              ######################################

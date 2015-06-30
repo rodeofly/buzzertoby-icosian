@@ -211,7 +211,8 @@
           type: "arrow",
           directed: true,
           color: "black",
-          weight: 1
+          weight: 1,
+          length: 10
         });
       }
     }
