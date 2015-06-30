@@ -1,4 +1,12 @@
+#####################################################################
+######### Globals !            ######################################
+#####################################################################
+
 chemin = []
+
+#####################################################################
+######### Empruntée à arborjs halfviz..sans le drag and drop ! ######
+#####################################################################
 
 Renderer = (canvas) ->
   canvas = $(canvas).get(0)
@@ -125,6 +133,11 @@ Renderer = (canvas) ->
           pos = $(canvas).offset()
           _mouseP = arbor.Point(e.pageX - (pos.left), e.pageY - (pos.top))
           selected = nearest = dragged = particleSystem.nearest(_mouseP)
+          
+          #####################################################################
+          ######### La c'est pour nous ! ######################################
+          #####################################################################
+          
           console.log "clicked point :", selected.node
           particleSystem.tweenNode( selected.node , 0.5, {color: "blue"} ) 
           
@@ -136,6 +149,10 @@ Renderer = (canvas) ->
             particleSystem.tweenEdge(edges[0], 0.5, {weight : 10})
           chemin.push last
           chemin.push selected.node
+          
+          #####################################################################
+          #####################################################################
+          #####################################################################
         
       $(canvas).mousedown handler.clicked
       return
@@ -171,33 +188,33 @@ Renderer = (canvas) ->
       x: p3.x + w
       y: p3.y + h
     intersect_line_line(p1, p2, tl, tr) or intersect_line_line(p1, p2, tr, br) or intersect_line_line(p1, p2, br, bl) or intersect_line_line(p1, p2, bl, tl) or false
+  that   
 
-  that
-
-sys = arbor.ParticleSystem()
-sys.parameters
-  repulsion : 100
-  stiffness : 50
-  friction  : 0.5
-  gravity   : true
-  precision : 0.005
-sys.renderer = Renderer("#viewport")
-      
-render_viewport = () ->
-  init : (pointer) ->
-    console.log("init") if local_debug 
-    particles = $( "#root" ).find(".dropped")      
-    if particles.length > 0
-      branch = {nodes:{}, edges:[]}
-      particles.each ->
-        transform_div_to_node($(this))
-        create_edges_for_heritier( $(this))
-      find_action_pointer $("#root") 
-    sys.start()
-  
-  clear : () -> sys.eachNode (node) -> sys.pruneNode node
+clear : () -> sys.eachNode (node) -> sys.pruneNode node
     
-$ ->  
+$ ->
+  sys = arbor.ParticleSystem()
+  sys.parameters
+    repulsion : 100
+    stiffness : 50
+    friction  : 0.5
+    gravity   : true
+    precision : 0.005
+  sys.renderer = Renderer("#viewport")
+    
+  $( "#amount-friction" ).html("0") 
+  local_debug = true
+  for i in [1..5]
+    sys.addNode i, {'color' : "red", 'shape' : 'dot', 'label' : " * ", 'mass' : "1" }
+  
+  for i in [1..5]
+    for j in [1..5]
+      sys.addEdge i, j, {type : "arrow", directed : true, color : "black", weight : 1}
+      
+  #####################################################################
+  ######### Sliders              ######################################
+  #####################################################################
+      
   $( "#slider-repulsion" ).slider
     range: "max"
     min   : 1
@@ -229,13 +246,6 @@ $ ->
     value : 0
     slide : ( event, ui ) -> 
       $( "#amount-friction" ).html( ui.value )
-      sys.parameters friction: ui.value           
-  $( "#amount-friction" ).html("0") 
-  local_debug = true
-  for i in [1..5]
-    sys.addNode i, {'color' : "red", 'shape' : 'dot', 'label' : " * ", 'mass' : "1" }
-  
-  for i in [1..5]
-    for j in [1..5]
-      sys.addEdge i, j, {type : "arrow", directed : true, color : "black", weight : 1}
+      sys.parameters friction: ui.value 
+      
 
