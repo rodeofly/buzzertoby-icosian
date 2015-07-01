@@ -143,10 +143,15 @@ Renderer = (canvas) ->
           
           if chemin.length > 1
             last = chemin.pop()
-            console.log last
+            $("#sortie").text last.p
             edges = particleSystem.getEdges( last, selected.node)
             console.log "found edges :", edges
-            particleSystem.tweenEdge(edges[0], 0.5, {weight : 10})
+            # ce serait cool que les chemins qui mènent au sommet qu'on voit de quitter disparaissent
+            # comme ça on ne pourrait pas tricher
+            # mais pas pour le premier sommet, le 0, celui-là il faut qu'on puisse y retourner
+#            particleSystem.pruneEdge edge for edge in particleSystem.getEdgesFrom last
+#            particleSystem.pruneEdge edge for edge in particleSystem.getEdgesTo last
+            particleSystem.tweenEdge(edges[0], 0.5, {weight : 4})
           chemin.push last
           chemin.push selected.node
           
@@ -193,23 +198,28 @@ Renderer = (canvas) ->
 clear : () -> sys.eachNode (node) -> sys.pruneNode node
     
 $ ->
-  [repulsion, stiffness, friction ] = [ 100, 50, 0.5]
+  [repulsion, stiffness, friction ] = [ 400, 200, 0.5]
 
   sys = arbor.ParticleSystem()
   sys.parameters
-    repulsion : 100
-    stiffness : 50
+    repulsion : 600
+    stiffness : 400
     friction  : 0.5
-    gravity   : true
+    gravity   : false
     precision : 0.005
   sys.renderer = Renderer("#viewport")
     
-  for i in [1..5]
-    sys.addNode i, {'color' : "red", 'shape' : 'dot', 'label' : " * ", 'mass' : "1" }
+  sys.addNode 0, {'color' : "blue", 'shape' : 'square', 'label' : " #{0} ", 'mass' : "1" }
+  for i in [1..19]
+    sys.addNode i, {'color' : "red", 'shape' : 'dot', 'label' : " #{i} ", 'mass' : "1" }
   
-  for i in [1..5]
-    for j in [1..5]
-      sys.addEdge i, j, {type : "arrow", directed : true, color : "black", weight : 1,  length:10,}
+  for i in [0..4]
+      sys.addEdge i, (i+1)%5, {type : "arrow", directed : false, color : "blue", weight : 1,  length:4,}
+      sys.addEdge i, 2*i+5, {type : "arrow", directed : false, color : "brown", weight : 1,  length:2,}
+      sys.addEdge i+5, i+6, {type : "arrow", directed : false, color : "green", weight : 1,  length:4,}
+      sys.addEdge i+10, (i+6)%10+5, {type : "arrow", directed : false, color : "green", weight : 1,  length:4,}
+      sys.addEdge 2*i+6, i+15, {type : "arrow", directed : false, color : "cyan", weight : 1,  length:2,}
+      sys.addEdge i+15, (i+1)%5+15, {type : "arrow", directed : false, color : "red", weight : 1,  length:5,}
       
   #####################################################################
   ######### Sliders              ######################################

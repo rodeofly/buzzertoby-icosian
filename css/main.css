@@ -60,6 +60,9 @@ body {
     font: 16px/26px Helvetica, Helvetica Neue, Arial;
 }
 
+
+canvas { border-radius: 20px; box-shadow: 6px 4px 8px grey; border: 2px outset grey;}
+
 .wrapper {
     width: 90%;
     margin: 0 5%;
