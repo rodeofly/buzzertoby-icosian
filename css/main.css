@@ -58,10 +58,13 @@ textarea {
 
 body {
     font: 16px/26px Helvetica, Helvetica Neue, Arial;
+  background: lightyellow; 
 }
 
 
-canvas { border-radius: 20px; box-shadow: 6px 4px 8px grey; border: 2px outset grey;}
+canvas { border: 8px inset orange;
+  background: lightgreen;
+}
 
 .wrapper {
     width: 90%;

@@ -143,7 +143,7 @@ Renderer = (canvas) ->
           
           if chemin.length > 1
             last = chemin.pop()
-            $("#sortie").text last.p
+            $("#sortie").text last.p.y
             edges = particleSystem.getEdges( last, selected.node)
             console.log "found edges :", edges
             # ce serait cool que les chemins qui mènent au sommet qu'on voit de quitter disparaissent
@@ -198,7 +198,7 @@ Renderer = (canvas) ->
 clear : () -> sys.eachNode (node) -> sys.pruneNode node
     
 $ ->
-  [repulsion, stiffness, friction ] = [ 400, 200, 0.5]
+  [repulsion, stiffness, friction ] = [ 400, 200, 0.2]
 
   sys = arbor.ParticleSystem()
   sys.parameters
@@ -206,12 +206,16 @@ $ ->
     stiffness : 400
     friction  : 0.5
     gravity   : false
-    precision : 0.005
+    precision : 0.0005
   sys.renderer = Renderer("#viewport")
     
-  sys.addNode 0, {'color' : "blue", 'shape' : 'square', 'label' : " #{0} ", 'mass' : "1" }
+  home = sys.addNode 0, {'color' : "blue", 'shape' : 'square', 'label' : " #{0} ", 'mass' : "1" }
+  home.p.x = -4620
+  home.p.y = 6630
   for i in [1..19]
-    sys.addNode i, {'color' : "red", 'shape' : 'dot', 'label' : " #{i} ", 'mass' : "1" }
+    noeud = sys.addNode i, {'color' : "red", 'shape' : 'dot', 'label' : " #{i} ", 'mass' : "1" }
+    noeud.p.x = home.p.x+(10+2*i)*Math.sin 2*Math.PI/5*i
+    noeud.p.y = home.p.y+(10+2*i)*Math.cos 2*Math.PI/5*i
   
   for i in [0..4]
       sys.addEdge i, (i+1)%5, {type : "arrow", directed : false, color : "blue", weight : 1,  length:4,}

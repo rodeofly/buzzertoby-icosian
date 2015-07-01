@@ -120,7 +120,7 @@
             });
             if (chemin.length > 1) {
               last = chemin.pop();
-              $("#sortie").text(last.p);
+              $("#sortie").text(last.p.y);
               edges = particleSystem.getEdges(last, selected.node);
               console.log("found edges :", edges);
               particleSystem.tweenEdge(edges[0], 0.5, {
@@ -185,30 +185,34 @@
   });
 
   $(function() {
-    var friction, i, j, k, ref, repulsion, stiffness, sys;
-    ref = [400, 200, 0.5], repulsion = ref[0], stiffness = ref[1], friction = ref[2];
+    var friction, home, i, j, k, noeud, ref, repulsion, stiffness, sys;
+    ref = [400, 200, 0.2], repulsion = ref[0], stiffness = ref[1], friction = ref[2];
     sys = arbor.ParticleSystem();
     sys.parameters({
       repulsion: 600,
       stiffness: 400,
       friction: 0.5,
       gravity: false,
-      precision: 0.005
+      precision: 0.0005
     });
     sys.renderer = Renderer("#viewport");
-    sys.addNode(0, {
+    home = sys.addNode(0, {
       'color': "blue",
       'shape': 'square',
       'label': " " + 0. + " ",
       'mass': "1"
     });
+    home.p.x = -4620;
+    home.p.y = 6630;
     for (i = j = 1; j <= 19; i = ++j) {
-      sys.addNode(i, {
+      noeud = sys.addNode(i, {
         'color': "red",
         'shape': 'dot',
         'label': " " + i + " ",
         'mass': "1"
       });
+      noeud.p.x = home.p.x + (10 + 2 * i) * Math.sin(2 * Math.PI / 5 * i);
+      noeud.p.y = home.p.y + (10 + 2 * i) * Math.cos(2 * Math.PI / 5 * i);
     }
     for (i = k = 0; k <= 4; i = ++k) {
       sys.addEdge(i, (i + 1) % 5, {
